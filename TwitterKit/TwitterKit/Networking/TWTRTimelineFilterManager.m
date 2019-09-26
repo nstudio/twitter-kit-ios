@@ -19,7 +19,7 @@
 #import <QuartzCore/QuartzCore.h>
 #endif
 #import <UIKit/UIKit.h>
-//#import "NSStringPunycodeAdditions.h"
+#import "NSStringPunycodeAdditions.h"
 #import "TWTRTimelineFilter.h"
 #import "TWTRTimelineFilterManager.h"
 #import "TWTRTweet.h"
@@ -238,12 +238,12 @@
 - (NSSet *)hostsSetFromStrings:(NSSet *)strings
 {
     NSMutableSet *hosts = [NSMutableSet set];
-//    for (NSString *string in strings) {
-//        NSString *domain = [self lowercaseText:[self hostFromURLString:[string encodedURLString]]];
-//        if (domain) {
-//            [hosts addObject:domain];
-//        }
-//    }
+    for (NSString *string in strings) {
+        NSString *domain = [self lowercaseText:[self hostFromURLString:[string encodedURLString]]];
+        if (domain) {
+            [hosts addObject:domain];
+        }
+    }
     return [hosts copy];
 }
 

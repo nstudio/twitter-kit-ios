@@ -126,7 +126,7 @@ typedef void (^TWTRTweetActionAPIClientCompletion)(TWTRAPIClient *_Nullable APIC
 
 - (void)setPresenterViewController:(UIViewController *)presenterViewController
 {
-//    _presenterViewController = presenterViewController ?: [TWTRUtils topViewController];
+    _presenterViewController = presenterViewController ?: [TWTRUtils topViewController];
 }
 
 #pragma mark - Liking

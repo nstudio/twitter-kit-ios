@@ -204,17 +204,17 @@ NSString *const TWTRSocialAppProviderActionSheetCompletionKey = @"TWTRAppleSocia
 
 - (void)showActionSheetWithCompletion:(TWTRAuthenticationProviderCompletion)completion
 {
-//    TWTRParameterAssertOrReturn(completion);
-//
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        UIActionSheet *sheet = [self actionSheet];
-//        objc_setAssociatedObject(sheet, (__bridge const void *)(TWTRSocialAppProviderActionSheetCompletionKey), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
-//
-//        // This shows the picker in the middle of the screen. It doesn't look good,
-//        // and the UIAlertController on iOS 8 would be the solution for this, but we
-//        // don't officially support iPad at this time so this will do.
-//        [sheet showInView:[TWTRUtils topViewController].view];
-//    });
+    TWTRParameterAssertOrReturn(completion);
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIActionSheet *sheet = [self actionSheet];
+        objc_setAssociatedObject(sheet, (__bridge const void *)(TWTRSocialAppProviderActionSheetCompletionKey), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
+        // This shows the picker in the middle of the screen. It doesn't look good,
+        // and the UIAlertController on iOS 8 would be the solution for this, but we
+        // don't officially support iPad at this time so this will do.
+        [sheet showInView:[TWTRUtils topViewController].view];
+    });
 }
 
 - (UIActionSheet *)actionSheet
