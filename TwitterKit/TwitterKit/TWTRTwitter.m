@@ -315,24 +315,35 @@ static TWTRTwitter *sharedTwitter;
 
 - (void)logInWithViewController:(UIViewController *)viewController completion:(TWTRLogInCompletion)completion
 {
+    // NSLog(@"here 1!!");
     TWTRParameterAssertOrReturn(completion);
     [self assertTwitterKitInitialized];
+    // NSLog(@"here 2!!");
 
+// NSLog(@"here %@", self.sessionStore.authConfig);
     TWTRLoginURLParser *loginURLParser = [[TWTRLoginURLParser alloc] initWithAuthConfig:self.sessionStore.authConfig];
+    // NSLog(@"loginURLParser %@", loginURLParser);
     if (![loginURLParser hasValidURLScheme]) {
+      // NSLog(@"TWTRInvalidInitializationException!");
         // Throws exception if the app does not have a valid scheme
         [NSException raise:TWTRInvalidInitializationException format:@"Attempt made to Log in or Like a Tweet without a valid Twitter Kit URL Scheme set up in the app settings. Please see https://dev.twitter.com/twitterkit/ios/installation for more info."];
     } else {
-        __weak typeof(viewController) weakViewController = viewController;
+      
+      // NSLog(@"weakViewController %@", viewController);
+       __weak typeof(viewController) weakViewController = viewController;
         self.mobileSSO = [[TWTRMobileSSO alloc] initWithAuthConfig:self.sessionStore.authConfig];
         [self.mobileSSO attemptAppLoginWithCompletion:^(TWTRSession *session, NSError *error) {
+          NSLog(@"attemptAppLoginWithCompletion!");
             if (session) {
+              NSLog(@"completion!");
                 completion(session, error);
             } else {
-                if (error.domain == TWTRLogInErrorDomain && error.code == TWTRLogInErrorCodeCancelled) {
+              // NSLog(@"error %@:", error);
+                if (error != nil && error.domain == TWTRLogInErrorDomain && error.code == TWTRLogInErrorCodeCancelled) {
                     // The user tapped "Cancel"
                     completion(session, error);
                 } else {
+                  NSLog(@"performWebBasedLogin");
                     typeof(weakViewController) strongViewController = weakViewController;
                     // There wasn't a Twitter app
                     [self performWebBasedLogin:strongViewController completion:completion];
@@ -379,23 +390,27 @@ static TWTRTwitter *sharedTwitter;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary *)options
 {
-    NSString *sourceApplication = options[UIApplicationOpenURLOptionsSourceApplicationKey];
-    BOOL isSSOBundle = [self.mobileSSO isSSOWithSourceApplication:sourceApplication];
-    BOOL isWeb = [self.mobileSSO isWebWithSourceApplication:sourceApplication];
-
-    if (isSSOBundle) {
+//    NSString *sourceApplication = options[UIApplicationOpenURLOptionsSourceApplicationKey];
+    // BOOL isSSOBundle = [self.mobileSSO isSSOWithSourceApplication:sourceApplication];
+    // BOOL isWeb = [self.mobileSSO isWebWithSourceApplication:sourceApplication];
+    BOOL hasNative = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]];
+    // if (isSSOBundle) {
+      if (hasNative) {
         if ([self.mobileSSO processRedirectURL:url]){
             return YES;
         }
-    } else if (isWeb) {
+      } else {
+
+      
+    // } else if (isWeb) {
         BOOL isTokenValid = [self.mobileSSO verifyOauthTokenResponsefromURL:url];
         if (isTokenValid) {
             // If it wasn't a Mobile SSO redirect, try to handle as
             // SFSafariViewController redirect
             return [self.webAuthenticationFlow resumeAuthenticationWithRedirectURL:url];
         }
-    } else {
-        [self.mobileSSO triggerInvalidSourceError];
+    // } else {
+    //     [self.mobileSSO triggerInvalidSourceError];
     }
 
     return NO;

@@ -81,7 +81,7 @@
     }
     [self setImage:image forState:UIControlStateNormal];
     [self addTarget:self action:@selector(shareButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    self.presenterViewController = [TWTRUtils topViewController];
+//    self.presenterViewController = [TWTRUtils topViewController];
 }
 
 - (void)configureWithTweet:(TWTRTweet *)tweet
@@ -91,7 +91,7 @@
 
 - (void)setPresenterViewController:(UIViewController *)presenterViewController
 {
-    _presenterViewController = presenterViewController ?: [TWTRUtils topViewController];
+//    _presenterViewController = presenterViewController ?: [TWTRUtils topViewController];
 }
 
 #pragma mark - Sharing
